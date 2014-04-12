@@ -24,15 +24,15 @@
     <!-- Example row of columns -->
     <div class="row">
         <div class="col-md-12">
-            <h2>Enter dimensions</h2>
+            <h2>Step 1: Draw the grid</h2>
 
-            <form action="" class="form-inline" role="form">
+            <form action="javascript:;" class="form-inline" role="form">
                 <div class="form-group">
                     <label class="sr-only" for="dimRows">rows</label>
                     <input type="number" min="0" step="1" pattern="\d+" class="form-control" id="dimRows"
                            placeholder="rows">
                 </div>
-                <div class="form-group"> : </div>
+                <div class="form-group">:</div>
                 <div class="form-group">
                     <label class="sr-only" for="dimColumns">Password</label>
                     <input type="number" min="0" step="1" pattern="\d+" class="form-control" id="dimColumns"
@@ -55,6 +55,7 @@
 </div>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="javascripts/lib/jquery-1.10.2.min.js"><\/script>')</script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 </body>
 </html>
