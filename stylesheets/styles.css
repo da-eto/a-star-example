@@ -1931,3 +1931,10 @@ button.close { padding: 0; cursor: pointer; background: transparent; border: 0; 
 h1, h2, h3, h4, h5, h6 { font-weight: bold; }
 
 .pagination .active > a, .pagination .active > a:hover { border-color: #ddd; }
+
+.game-board { width: auto; }
+.game-board td { width: 2em; height: 2em; cursor: pointer; }
+.game-board td div { width: 100%; height: 100%; }
+.game-board.wide td { width: 4em; height: 4em; }
+.game-board .rabbit { background: #ffffff; }
+.game-board .carrot { background: orangered; }

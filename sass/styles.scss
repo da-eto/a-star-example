@@ -2,3 +2,31 @@
 @import "variables";
 @import "bootstrap";
 @import "bootswatch";
+
+.game-board {
+  width: auto;
+
+  td {
+    width: 2em;
+    height: 2em;
+    cursor: pointer;
+
+    div {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &.wide td {
+    width: 4em;
+    height: 4em;
+  }
+
+  .rabbit {
+    background: #ffffff;
+  }
+
+  .carrot {
+    background: orangered;
+  }
+}
