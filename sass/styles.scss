@@ -27,6 +27,10 @@
       background-color: $brand-info;
     }
 
+    &.drag-over {
+      background-color: lighten($brand-info, 25%);
+    }
+
     div {
       width: 100%;
       height: 100%;
