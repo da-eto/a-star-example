@@ -1937,5 +1937,6 @@ h1, h2, h3, h4, h5, h6 { font-weight: bold; }
 .game-board td:hover { background-color: #66afe9; }
 .game-board td div { width: 100%; height: 100%; }
 .game-board.wide td { width: 5em; height: 5em; }
-.game-board .rabbit { background: url('../images/rabbit.png?1397348568') no-repeat; background-size: 100% auto; }
-.game-board .carrot { background: url('../images/carrot.png?1397348506') no-repeat; background-size: 100% auto; }
+.game-board .rabbit { background: url('../images/rabbit.png?1397349231') no-repeat; background-size: 100% auto; }
+.game-board .carrot { background: url('../images/carrot.png?1397349231') no-repeat; background-size: 100% auto; }
+.game-board .tree { background: url('../images/tree.png?1397350074') no-repeat; background-size: 100% auto; }
