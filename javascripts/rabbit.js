@@ -139,9 +139,10 @@ jQuery(document).ready(function ($) {
         }
     };
 
-    var SearchSimulator = function (map, heuristic) {
+    var SearchSimulator = function (map, heuristic, options) {
         this.map = map;
         this.heuristic = heuristic;
+        this.options = options;
     };
 
     SearchSimulator.prototype = {
@@ -188,10 +189,19 @@ jQuery(document).ready(function ($) {
         add: function (queue, node) {
             queue.enqueue(node);
             node.opened = true;
+
+            if (this.options.onEnqueue) {
+                this.options.onEnqueue(node);
+            }
         },
         minimal: function (queue) {
             var node = queue.dequeue();
             node.closed = true;
+
+            if (this.options.onDequeue) {
+                this.options.onDequeue(node);
+            }
+
             return node;
         },
         backtrace: function (node) {
@@ -342,6 +352,26 @@ jQuery(document).ready(function ($) {
             return map;
         };
 
+        this.scoreCell = function (row, col, closed, score) {
+            var $cell = $board.find('tr:eq(' + row + ')>td:eq(' + col + ')>div');
+
+            if ($cell.length) {
+                var cls = closed ? 'closed' : 'opened';
+                $cell.removeClass('closed opened').addClass(cls).addClass('circle');
+                var $points = $('<div class="points"></div>');
+                $points.html(score);
+                $cell.html('').append($points);
+            }
+        };
+
+        this.markDirection = function (row, col, dir) {
+            var $cell = $board.find('tr:eq(' + row + ')>td:eq(' + col + ')>div');
+
+            if ($cell.length) {
+                $cell.removeClass('from-top from-right from-bottom from-left').addClass(dir);
+            }
+        };
+
         return this;
     })('.game-container');
 
@@ -367,8 +397,37 @@ jQuery(document).ready(function ($) {
 
     $('[data-role="starter"]').on('click', function () {
         board.disableEditor();
-        var simulator = new SearchSimulator(board.createMap(), function (from, to) {
+        var map = board.createMap();
+        var manhattan = function (from, to) {
             return Math.abs(to.row - from.col) + Math.abs(to.row - from.col);
+        };
+        var simulator = new SearchSimulator(map, manhattan, {
+            onEnqueue: function (node) {
+                if (node != map.start && node != map.end) {
+                    board.scoreCell(node.row, node.col, node.closed, node.f());
+                }
+
+                if (node.parent) {
+                    var pr = node.parent.row;
+                    var pc = node.parent.col;
+                    var dir = '';
+
+                    if (pr == node.row - 1 && pc == node.col) {
+                        dir = 'from-top';
+                    } else if (pr == node.row && pc == node.col + 1) {
+                        dir = 'from-right';
+                    } else if (pr == node.row + 1 && pc == node.col) {
+                        dir = 'from-bottom';
+                    } else if (pr == node.row && pc == node.col - 1) {
+                        dir = 'from-left';
+                    }
+
+                    board.markDirection(node.row, node.col, dir);
+                }
+            },
+            onDequeue: function (node) {
+                console.log('dequeue', node);
+            }
         });
         console.log(simulator.search());
         console.log(simulator.map);
