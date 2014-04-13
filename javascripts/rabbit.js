@@ -1,5 +1,36 @@
 jQuery(document).ready(function ($) {
+    // simple heap implementation
+    var PriorityQueue = function () {
+        this.storage = [];
+    };
 
+    PriorityQueue.prototype = {
+        size: function () {
+            // TODO
+            return 0;
+        },
+        enqueue: function (item) {
+            // TODO
+        },
+        dequeue: function () {
+            // TODO
+        }
+    };
+
+    var queue = new PriorityQueue();
+
+    console.log(queue);
+
+    queue.enqueue(2);
+    queue.enqueue(4);
+    queue.enqueue(1);
+    queue.enqueue(3);
+
+    while (queue.size() > 0) {
+        console.log(queue.dequeue());
+    }
+
+    // game board
     var board = new (function (container) {
         var $container = $(container);
 
@@ -116,27 +147,49 @@ jQuery(document).ready(function ($) {
             $board.off('click', '[data-role="barrier"]', barrier.remove);
         };
 
+        this.getMap = function () {
+            if (null == $board) {
+                return [];
+            }
+
+            var map = [];
+
+            $board.find('tr').each(function (i, row) {
+                map[i] = [];
+
+                $(row).find('td').each(function (j, cell) {
+                    map[i][j] = cell;
+                });
+            });
+
+            return map;
+        };
+
         return this;
     })('.game-container');
 
+    // user interaction
     $('[data-role="drawer"]').on('click', function () {
-        var rows = parseInt($('#dimRows').val(), 10);
+        var $dimRowsInput = $('#dimRows');
+        var rows = parseInt($dimRowsInput.val(), 10);
         rows = rows >= 1 ? rows : 1;
 
-        var columns = parseInt($('#dimColumns').val(), 10);
+        var $dimColumnsInput = $('#dimColumns');
+        var columns = parseInt($dimColumnsInput.val(), 10);
         columns = columns >= 1 ? columns : 1;
 
         if (rows * columns < 2) {
             columns = 2;
         }
 
-        $('#dimRows').val(rows);
-        $('#dimColumns').val(columns);
+        $dimRowsInput.val(rows);
+        $dimColumnsInput.val(columns);
 
         board.init(rows, columns);
     });
 
     $('[data-role="starter"]').on('click', function () {
         board.disableEditor();
+        console.log(board.getMap());
     });
 });
