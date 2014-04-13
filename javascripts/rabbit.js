@@ -73,26 +73,9 @@ jQuery(document).ready(function ($) {
         }
     };
 
-    var manhattan = function (from, to) {
-        return Math.abs(to.x - from.x) + Math.abs(to.y - from.y);
-    };
-
-    var GridMap = function () {
-        // TODO:
-    };
-
-    GridMap.prototype = {
-        neighbors: function (cell) {
-            // TODO
-            return [];
-        },
-        distance: function (from, to) {
-            return Math.abs(to.x - from.x) + Math.abs(to.y - from.y);
-        }
-    };
-
-    var SearchNode = function (cell, parent, g, h) {
-        this.cell = cell;
+    var SearchNode = function (row, col, parent, g, h) {
+        this.row = row;
+        this.col = col;
         this.parent = parent;
         this.g = g;
         this.h = h;
@@ -106,11 +89,58 @@ jQuery(document).ready(function ($) {
         }
     };
 
-    var SearchSimulator = function (map, start, end, heuristic, delay) {
+    var SearchMap = function () {
+        this.grid = [];
+        this.start = null;
+        this.end = null;
+    };
+
+    SearchMap.prototype = {
+        neighbors: function (node) {
+            var result = [];
+            var r = node.row;
+            var c = node.col;
+
+            if (this.grid[r - 1] && this.grid[r - 1][c]) {
+                result.push(this.grid[r - 1][c]);
+            }
+
+            if (this.grid[r] && this.grid[r][c + 1]) {
+                result.push(this.grid[r][c + 1]);
+            }
+
+            if (this.grid[r + 1] && this.grid[r + 1][c]) {
+                result.push(this.grid[r + 1][c]);
+            }
+
+            if (this.grid[r] && this.grid[r][c - 1]) {
+                result.push(this.grid[r][c - 1]);
+            }
+
+            return result;
+        },
+        distance: function (from, to) {
+            return Math.abs(to.row - from.row) + Math.abs(to.col - from.col);
+        },
+        add: function (r, c) {
+            if (!this.grid[r]) {
+                this.grid[r] = [];
+            }
+
+            this.grid[r][c] = new SearchNode(r, c, null, 0, 0);
+        },
+        setStart: function (r, c) {
+            this.add(r, c);
+            this.start = this.grid[r][c];
+        },
+        setEnd: function (r, c) {
+            this.add(r, c);
+            this.end = this.grid[r][c];
+        }
+    };
+
+    var SearchSimulator = function (map, heuristic) {
         this.map = map;
-        this.start = start;
-        this.end = end;
-        this.delay = delay;
         this.heuristic = heuristic;
     };
 
@@ -119,17 +149,16 @@ jQuery(document).ready(function ($) {
             var queue = new PriorityQueue(function (node) {
                 return node.f();
             });
-            var current = new SearchNode(this.start, null, 0, 0);
-            this.push(queue, current);
+            this.add(queue, this.map.start);
 
             while (!queue.isEmpty()) {
-                var node = this.pop(queue);
+                var node = this.minimal(queue);
 
-                if (node.cell === this.end) {
-                    return this.backtrace(this.end);
+                if (node === this.map.end) {
+                    return this.backtrace(this.map.end);
                 }
 
-                var neighbors = this.map.neighbors(node.cell);
+                var neighbors = this.map.neighbors(node);
 
                 for (var i = 0; i < neighbors.length; i++) {
                     var neighbor = neighbors[i];
@@ -142,11 +171,11 @@ jQuery(document).ready(function ($) {
 
                     if (!neighbor.opened || distance < neighbor.g) {
                         neighbor.g = distance;
-                        neighbor.h = neighbor.h || this.heuristic(neighbor.cell, this.end);
+                        neighbor.h = neighbor.h || this.heuristic(neighbor, this.map.end);
                         neighbor.parent = node;
 
                         if (!neighbor.opened) {
-                            this.push(queue, neighbor);
+                            this.add(queue, neighbor);
                         } else {
                             queue.down(queue.storage.indexOf(neighbor));
                         }
@@ -156,15 +185,13 @@ jQuery(document).ready(function ($) {
 
             return [];
         },
-        push: function (queue, node) {
+        add: function (queue, node) {
             queue.enqueue(node);
             node.opened = true;
-            $(this).trigger('search.visited', node);
         },
-        pop: function (queue) {
+        minimal: function (queue) {
             var node = queue.dequeue();
             node.closed = true;
-            $(this).trigger('search.closed', node);
             return node;
         },
         backtrace: function (node) {
@@ -243,7 +270,7 @@ jQuery(document).ready(function ($) {
 
             $cells.droppable({
                 accept: function (element) {
-                    return $(this).has('[data-role="empty"]').length > 0 && $(element).cell('role') == 'character';
+                    return $(this).has('[data-role="empty"]').length > 0 && $(element).data('role') == 'character';
                 },
                 drop: function (event, ui) {
                     var $person = $(ui.draggable);
@@ -288,18 +315,27 @@ jQuery(document).ready(function ($) {
             $board.off('click', '[data-role="barrier"]', barrier.remove);
         };
 
-        this.getMap = function () {
+        this.createMap = function () {
             if (null == $board) {
                 return [];
             }
 
-            var map = [];
+            var map = new SearchMap();
 
-            $board.find('tr').each(function (i, row) {
-                map[i] = [];
+            $board.find('tr').each(function (row, tr) {
+                $(tr).find('td').each(function (col, td) {
+                    var $cell = $(td).find('div').eq(0);
+                    var role = $cell.data('role');
 
-                $(row).find('td').each(function (j, cell) {
-                    map[i][j] = $(cell).find('div').eq(0);
+                    if ('character' == role) {
+                        if ($cell.hasClass('rabbit')) {
+                            map.setStart(row, col);
+                        } else {
+                            map.setEnd(row, col);
+                        }
+                    } else if ('empty' == role) {
+                        map.add(row, col);
+                    }
                 });
             });
 
@@ -331,6 +367,10 @@ jQuery(document).ready(function ($) {
 
     $('[data-role="starter"]').on('click', function () {
         board.disableEditor();
-        console.log(board.getMap());
+        var simulator = new SearchSimulator(board.createMap(), function (from, to) {
+            return Math.abs(to.row - from.col) + Math.abs(to.row - from.col);
+        });
+        console.log(simulator.search());
+        console.log(simulator.map);
     });
 });
