@@ -14,7 +14,7 @@ jQuery(document).ready(function ($) {
 
     $cells.droppable({
         accept: function (element) {
-            return $(this).children().length == 0 && $(element).data('role') == 'character';
+            return $(this).has('[data-role="empty"]').length > 0 && $(element).data('role') == 'character';
         },
         drop: function (event, ui) {
             var $character = $(ui.draggable);
@@ -22,6 +22,10 @@ jQuery(document).ready(function ($) {
             var $target = $(this);
 
             $target.removeClass('drag-over');
+            $target
+                .children()
+                .detach()
+                .appendTo($oldParent);
             $character
                 .detach()
                 .appendTo($target)
