@@ -101,6 +101,11 @@ jQuery(document).ready(function ($) {
         };
 
         this.disableEditor = function () {
+            if (null == $board) {
+                alert("Can't disable editor for non existent board");
+                return;
+            }
+
             $characters.draggable('disable');
             $cells.droppable('disable');
             $board.off('click', '[data-role="empty"]', barrier.create);
