@@ -19,9 +19,6 @@ jQuery(document).ready(function ($) {
         var positioningDuration = 250;
 
         this.init = function (rows, columns) {
-            rows = parseInt(rows, 10);
-            columns = parseInt(columns, 10);
-
             if (rows < 0 || columns < 0 || (rows * columns) < 2) {
                 alert("Can't create board with " + rows + " rows and " + columns + " columns");
                 return;
