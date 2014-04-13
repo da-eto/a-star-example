@@ -1,5 +1,6 @@
 require 'bootstrap-sass'
 # Require any additional compass plugins here.
+require "compass-recipes"
 
 
 # Set this to the root of your project when deployed:

@@ -1932,11 +1932,18 @@ h1, h2, h3, h4, h5, h6 { font-weight: bold; }
 
 .pagination .active > a, .pagination .active > a:hover { border-color: #ddd; }
 
-.game-board { width: auto; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
-.game-board td { width: 2.5em; height: 2.5em; cursor: pointer; }
-.game-board td:hover { background-color: #66afe9; }
-.game-board td div { width: 100%; height: 100%; }
-.game-board.wide td { width: 5em; height: 5em; }
+.game-board { width: auto; text-align: center; vertical-align: middle; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+.game-board td { width: 3em; height: 3em; padding: 0 !important; cursor: pointer; }
+.game-board td:hover { background-color: #5bc0de; }
+.game-board td div { width: 100%; height: 100%; position: relative; }
+.game-board td div.circle { font-size: 1em; line-height: 3em; width: 100%; height: 100%; background: trasparent; -webkit-border-radius: 50%; -moz-border-radius: 50%; -ms-border-radius: 50%; -o-border-radius: 50%; border-radius: 50%; }
+.game-board td div.open { background: #b5dfb5; }
+.game-board td div.closed { background: #fae3c4; }
+.game-board td div.from-top:before, .game-board td div.from-right:before, .game-board td div.from-bottom:before, .game-board td div.from-left:before { content: ""; display: block; position: absolute; }
+.game-board td div.from-top:before { top: 0; left: 50%; width: 0; height: 0; border-top: 0.6em solid #d9534f; border-right: 0.6em solid transparent; border-left: 0.6em solid transparent; margin: 0 0 0 -0.6em; }
+.game-board td div.from-right:before { top: 50%; right: 0; width: 0; height: 0; border-top: 0.6em solid transparent; border-right: 0.6em solid #d9534f; border-bottom: 0.6em solid transparent; margin: -0.6em 0 0 0; }
+.game-board td div.from-bottom:before { bottom: 0; left: 50%; width: 0; height: 0; border-right: 0.6em solid transparent; border-bottom: 0.6em solid #d9534f; border-left: 0.6em solid transparent; margin: 0 0 0 -0.6em; }
+.game-board td div.from-left:before { top: 50%; left: 0; width: 0; height: 0; border-top: 0.6em solid transparent; border-bottom: 0.6em solid transparent; border-left: 0.6em solid #d9534f; margin: -0.6em 0 0 0; }
 .game-board .rabbit { background: url('../images/rabbit.png?1397349231') no-repeat; background-size: 100% auto; }
-.game-board .carrot { background: url('../images/carrot.png?1397349231') no-repeat; background-size: 100% auto; }
+.game-board .carrot { background: url('../images/carrot.png?1397353814') no-repeat; background-size: 100% auto; }
 .game-board .tree { background: url('../images/tree.png?1397350074') no-repeat; background-size: 100% auto; }

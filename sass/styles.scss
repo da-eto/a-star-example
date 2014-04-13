@@ -2,29 +2,86 @@
 @import "variables";
 @import "bootstrap";
 @import "bootswatch";
+@import "recipes/shape";
+
+@mixin circle($width, $color) {
+  width: $width;
+  height: $width;
+  background: $color;
+  @include border-radius($width / 2);
+}
 
 .game-board {
   width: auto;
+  text-align: center;
+  vertical-align: middle;
   @include user-select(none);
 
   td {
-    width: 2.5em;
-    height: 2.5em;
+    width: 3em;
+    height: 3em;
+    padding: 0 !important;
     cursor: pointer;
 
     &:hover {
-      background-color: $input-border-focus;
+      background-color: $brand-info;
     }
 
     div {
       width: 100%;
       height: 100%;
-    }
-  }
+      position: relative;
 
-  &.wide td {
-    width: 5em;
-    height: 5em;
+      &.circle {
+        font-size: 1em;
+        line-height: 3em;
+        @include circle(100%, trasparent);
+      }
+
+      &.open {
+        background: lighten($brand-success, 25%);
+      }
+
+      &.closed {
+        background: lighten($brand-warning, 25%);
+      }
+
+      &.from-top:before, &.from-right:before, &.from-bottom:before, &.from-left:before {
+        content: "";
+        display: block;
+        position: absolute;
+      }
+
+      $arrow_width: 1.2em;
+
+      &.from-top:before {
+        top: 0;
+        left: 50%;
+        @include triangle(bottom, $arrow_width, half, $brand-danger);
+        margin: 0 0 0 (- $arrow_width / 2);
+      }
+
+      &.from-right:before {
+        top: 50%;
+        right: 0;
+        @include triangle(left, $arrow_width, half, $brand-danger);
+        margin: (- $arrow_width / 2) 0 0 0;
+      }
+
+      &.from-bottom:before {
+        bottom: 0;
+        left: 50%;
+        @include triangle(top, $arrow_width, half, $brand-danger);
+        margin: 0 0 0 (- $arrow_width / 2);
+      }
+
+      &.from-left:before {
+        top: 50%;
+        left: 0;
+        @include triangle(right, $arrow_width, half, $brand-danger);
+        margin: (- $arrow_width / 2) 0 0 0;
+      }
+    }
   }
 
   .rabbit {
