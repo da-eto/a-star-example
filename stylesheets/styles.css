@@ -1932,9 +1932,10 @@ h1, h2, h3, h4, h5, h6 { font-weight: bold; }
 
 .pagination .active > a, .pagination .active > a:hover { border-color: #ddd; }
 
-.game-board { width: auto; }
-.game-board td { width: 2em; height: 2em; cursor: pointer; }
+.game-board { width: auto; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+.game-board td { width: 2.5em; height: 2.5em; cursor: pointer; }
+.game-board td:hover { background-color: #66afe9; }
 .game-board td div { width: 100%; height: 100%; }
-.game-board.wide td { width: 4em; height: 4em; }
-.game-board .rabbit { background: #ffffff; }
-.game-board .carrot { background: orangered; }
+.game-board.wide td { width: 5em; height: 5em; }
+.game-board .rabbit { background: url('../images/rabbit.png?1397348568') no-repeat; background-size: 100% auto; }
+.game-board .carrot { background: url('../images/carrot.png?1397348506') no-repeat; background-size: 100% auto; }

@@ -1,15 +1,20 @@
-// customize bootstrap variables here:
+@import "compass";
 @import "variables";
 @import "bootstrap";
 @import "bootswatch";
 
 .game-board {
   width: auto;
+  @include user-select(none);
 
   td {
-    width: 2em;
-    height: 2em;
+    width: 2.5em;
+    height: 2.5em;
     cursor: pointer;
+
+    &:hover {
+      background-color: $input-border-focus;
+    }
 
     div {
       width: 100%;
@@ -18,15 +23,17 @@
   }
 
   &.wide td {
-    width: 4em;
-    height: 4em;
+    width: 5em;
+    height: 5em;
   }
 
   .rabbit {
-    background: #ffffff;
+    background: image-url("rabbit.png") no-repeat;
+    background-size: 100% auto;
   }
 
   .carrot {
-    background: orangered;
+    background: image-url("carrot.png") no-repeat;
+    background-size: 100% auto;
   }
 }
