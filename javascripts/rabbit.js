@@ -73,6 +73,106 @@ jQuery(document).ready(function ($) {
         }
     };
 
+    var manhattan = function (from, to) {
+        return Math.abs(to.x - from.x) + Math.abs(to.y - from.y);
+    };
+
+    var GridMap = function () {
+        // TODO:
+    };
+
+    GridMap.prototype = {
+        neighbors: function (cell) {
+            // TODO
+            return [];
+        },
+        distance: function (from, to) {
+            return Math.abs(to.x - from.x) + Math.abs(to.y - from.y);
+        }
+    };
+
+    var SearchNode = function (cell, parent, g, h) {
+        this.cell = cell;
+        this.parent = parent;
+        this.g = g;
+        this.h = h;
+        this.closed = false;
+        this.opened = false;
+    };
+
+    SearchNode.prototype = {
+        f: function () {
+            return this.g + this.h;
+        }
+    };
+
+    var SearchSimulator = function (map, start, end, heuristic, delay) {
+        this.map = map;
+        this.start = start;
+        this.end = end;
+        this.delay = delay;
+        this.heuristic = heuristic;
+    };
+
+    SearchSimulator.prototype = {
+        search: function () {
+            var queue = new PriorityQueue(function (node) {
+                return node.f();
+            });
+            var current = new SearchNode(this.start, null, 0, 0);
+            this.push(queue, current);
+
+            while (!queue.isEmpty()) {
+                var node = this.pop(queue);
+
+                if (node.cell === this.end) {
+                    return this.backtrace(this.end);
+                }
+
+                var neighbors = this.map.neighbors(node.cell);
+
+                for (var i = 0; i < neighbors.length; i++) {
+                    var neighbor = neighbors[i];
+
+                    if (neighbor.closed) {
+                        continue;
+                    }
+
+                    var distance = node.g + this.map.distance(node, neighbor);
+
+                    if (!neighbor.opened || distance < neighbor.g) {
+                        neighbor.g = distance;
+                        neighbor.h = neighbor.h || this.heuristic(neighbor.cell, this.end);
+                        neighbor.parent = node;
+
+                        if (!neighbor.opened) {
+                            this.push(queue, neighbor);
+                        } else {
+                            queue.down(queue.storage.indexOf(neighbor));
+                        }
+                    }
+                }
+            }
+
+            return [];
+        },
+        push: function (queue, node) {
+            queue.enqueue(node);
+            node.opened = true;
+            $(this).trigger('search.visited', node);
+        },
+        pop: function (queue) {
+            var node = queue.dequeue();
+            node.closed = true;
+            $(this).trigger('search.closed', node);
+            return node;
+        },
+        backtrace: function (node) {
+            // TODO
+            return [];
+        }
+    };
+
     // game board
     var board = new (function (container) {
         var $container = $(container);
@@ -108,8 +208,6 @@ jQuery(document).ready(function ($) {
                 var colElements = [];
 
                 for (var j = 0; j < columns; j++) {
-                    // TODO: WIP: remove
-//                    colElements.push($('<td><div data-role="empty" class="circle from-top"><div class="points">23</div></div></td>'));
                     colElements.push($('<td><div data-role="empty"></div></td>'));
                 }
 
@@ -145,7 +243,7 @@ jQuery(document).ready(function ($) {
 
             $cells.droppable({
                 accept: function (element) {
-                    return $(this).has('[data-role="empty"]').length > 0 && $(element).data('role') == 'character';
+                    return $(this).has('[data-role="empty"]').length > 0 && $(element).cell('role') == 'character';
                 },
                 drop: function (event, ui) {
                     var $person = $(ui.draggable);
@@ -201,7 +299,7 @@ jQuery(document).ready(function ($) {
                 map[i] = [];
 
                 $(row).find('td').each(function (j, cell) {
-                    map[i][j] = cell;
+                    map[i][j] = $(cell).find('div').eq(0);
                 });
             });
 
