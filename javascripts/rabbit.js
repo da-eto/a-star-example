@@ -1,34 +1,49 @@
 jQuery(document).ready(function ($) {
-    // simple heap implementation
-    var PriorityQueue = function () {
-        this.storage = [];
+
+    // simple heap implementation of priority queue
+    var PriorityQueue = function (norm) {
+        this.storage = [null];
+        this.norm = norm || function (e) { return e; };
     };
 
     PriorityQueue.prototype = {
         size: function () {
-            // TODO
-            return 0;
+            return this.storage.length - 1;
         },
         enqueue: function (item) {
-            // TODO
+            this.storage.push(item);
+            this.lift(this.size());
         },
         dequeue: function () {
             // TODO
+        },
+        lift: function (index) {
+            var parent = Math.floor(index / 2);
+
+            while (parent > 0) {
+                if (this.norm(this.storage[index]) < this.norm(this.storage[parent])) {
+                    var tmp = this.storage[parent];
+                    this.storage[parent] = this.storage[index];
+                    this.storage[index] = tmp;
+                }
+
+                index = parent;
+                parent = Math.floor(index / 2);
+            }
         }
     };
 
     var queue = new PriorityQueue();
 
-    console.log(queue);
-
     queue.enqueue(2);
     queue.enqueue(4);
-    queue.enqueue(1);
     queue.enqueue(3);
+    queue.enqueue(5);
+    queue.enqueue(9);
+    queue.enqueue(3);
+    queue.enqueue(1);
 
-    while (queue.size() > 0) {
-        console.log(queue.dequeue());
-    }
+    console.log(queue.storage);
 
     // game board
     var board = new (function (container) {
