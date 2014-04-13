@@ -1948,3 +1948,4 @@ h1, h2, h3, h4, h5, h6 { font-weight: bold; }
 .game-board .rabbit { background: url('../images/rabbit.png?1397349231') no-repeat; background-size: 100% auto; }
 .game-board .carrot { background: url('../images/carrot.png?1397353814') no-repeat; background-size: 100% auto; }
 .game-board .tree { background: url('../images/tree.png?1397350074') no-repeat; background-size: 100% auto; }
+.game-board .ui-state-disabled { opacity: 100; filter: alpha(opacity=10000); }

@@ -53,4 +53,9 @@ jQuery(document).ready(function ($) {
     $board.on('click', '[data-role="barrier"]', function () {
         $(this).attr('data-role', 'empty').removeClass();
     });
+
+    $('[data-role="starter"]').on('click', function () {
+        $characters.draggable('disable');
+        $cells.droppable('disable');
+    });
 });

@@ -102,4 +102,8 @@
     background: image-url("tree.png") no-repeat;
     background-size: 100% auto;
   }
+
+  .ui-state-disabled {
+    @include opacity(100);
+  }
 }
