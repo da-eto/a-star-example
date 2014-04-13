@@ -46,16 +46,21 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    $board.on('click', '[data-role="empty"]', function () {
+    var createBarrier = function () {
         $(this).attr('data-role', 'barrier').removeClass().addClass('tree');
-    });
+    };
 
-    $board.on('click', '[data-role="barrier"]', function () {
+    var removeBarrier = function () {
         $(this).attr('data-role', 'empty').removeClass();
-    });
+    };
+
+    $board.on('click', '[data-role="empty"]', createBarrier);
+    $board.on('click', '[data-role="barrier"]', removeBarrier);
 
     $('[data-role="starter"]').on('click', function () {
         $characters.draggable('disable');
         $cells.droppable('disable');
+        $board.off('click', '[data-role="empty"]', createBarrier);
+        $board.off('click', '[data-role="barrier"]', removeBarrier);
     });
 });
