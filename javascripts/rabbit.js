@@ -30,16 +30,21 @@ jQuery(document).ready(function ($) {
             $container.children().remove();
 
             $board = $('<table class="table table-bordered game-board"></table>');
+            var rowElements = [];
 
             for (var i = 0; i < rows; i++) {
                 var $tr = $('<tr></tr>');
+                var colElements = [];
 
                 for (var j = 0; j < columns; j++) {
-                    $tr.append($('<td><div data-role="empty"></div></td>'));
+                    colElements.push($('<td><div data-role="empty"></div></td>'));
                 }
 
-                $board.append($tr);
+                $tr.append(colElements);
+                rowElements.push($tr);
             }
+
+            $board.append(rowElements);
 
             $board.find('td:first>div').attr('data-role', 'character').addClass('rabbit');
             $board.find('td:last>div').attr('data-role', 'character').addClass('carrot');
