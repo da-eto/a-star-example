@@ -1933,12 +1933,12 @@ h1, h2, h3, h4, h5, h6 { font-weight: bold; }
 .pagination .active > a, .pagination .active > a:hover { border-color: #ddd; }
 
 .game-board { width: auto; text-align: center; vertical-align: middle; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
-.game-board td { width: 4em; height: 4em; padding: 0 !important; cursor: pointer; }
+.game-board td { width: 4em; min-width: 2em; padding: 0 !important; cursor: pointer; }
 .game-board td:hover { background-color: #5bc0de; }
 .game-board td.drag-over { background-color: #c5e9f3; }
-.game-board td div { width: 100%; height: 100%; position: relative; }
-.game-board td div.circle { font-size: 1.4em; line-height: 2.8em; width: 100%; height: 100%; background: trasparent; -webkit-border-radius: 50%; -moz-border-radius: 50%; -ms-border-radius: 50%; -o-border-radius: 50%; border-radius: 50%; }
-.game-board td div.open { background: #b5dfb5; }
+.game-board td div { width: 100%; height: 0; padding-bottom: 100%; position: relative; }
+.game-board td div.circle { width: 100%; height: 100%; background: #b5dfb5; -webkit-border-radius: 50%; -moz-border-radius: 50%; -ms-border-radius: 50%; -o-border-radius: 50%; border-radius: 50%; height: 0; }
+.game-board td div.circle .points { position: absolute; width: 2em; height: 1em; font-size: 1em; line-height: 1em; margin: -0.5em 0 0 -1em; text-align: center; top: 50%; left: 50%; }
 .game-board td div.closed { background: #fae3c4; }
 .game-board td div.from-top:before, .game-board td div.from-right:before, .game-board td div.from-bottom:before, .game-board td div.from-left:before { content: ""; display: block; position: absolute; }
 .game-board td div.from-top:before { top: 0; left: 50%; width: 0; height: 0; border-top: 0.5em solid #d9534f; border-right: 0.5em solid transparent; border-left: 0.5em solid transparent; margin: 0 0 0 -0.5em; }

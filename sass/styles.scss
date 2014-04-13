@@ -19,7 +19,7 @@
 
   td {
     width: 4em;
-    height: 4em;
+    min-width: 2em;
     padding: 0 !important;
     cursor: pointer;
 
@@ -33,17 +33,25 @@
 
     div {
       width: 100%;
-      height: 100%;
+      height: 0;
+      padding-bottom: 100%;
       position: relative;
 
       &.circle {
-        font-size: 1.4em;
-        line-height: 2.8em;
-        @include circle(100%, trasparent);
-      }
+        @include circle(100%, lighten($brand-success, 25%));
+        height: 0;
 
-      &.open {
-        background: lighten($brand-success, 25%);
+        .points {
+          position: absolute;
+          width: 2em;
+          height: 1em;
+          font-size: 1em;
+          line-height: 1em;
+          margin: -0.5em 0 0 -1em;
+          text-align: center;
+          top: 50%;
+          left: 50%;
+        }
       }
 
       &.closed {

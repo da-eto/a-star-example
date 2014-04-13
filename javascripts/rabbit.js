@@ -34,6 +34,8 @@ jQuery(document).ready(function ($) {
                 var colElements = [];
 
                 for (var j = 0; j < columns; j++) {
+                    // TODO: WIP: remove
+//                    colElements.push($('<td><div data-role="empty" class="circle from-top"><div class="points">23</div></div></td>'));
                     colElements.push($('<td><div data-role="empty"></div></td>'));
                 }
 
@@ -43,8 +45,8 @@ jQuery(document).ready(function ($) {
 
             $board.append(rowElements);
 
-            $board.find('td:first>div').attr('data-role', 'character').addClass('rabbit');
-            $board.find('td:last>div').attr('data-role', 'character').addClass('carrot');
+            $board.find('td:first>div').attr('data-role', 'character').html('').removeClass().addClass('rabbit');
+            $board.find('td:last>div').attr('data-role', 'character').html('').removeClass().addClass('carrot');
 
             $characters = $board.find('[data-role="character"]');
             $cells = $board.find('td');
