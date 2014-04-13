@@ -45,4 +45,12 @@ jQuery(document).ready(function ($) {
             $(this).removeClass('drag-over');
         }
     });
+
+    $board.on('click', '[data-role="empty"]', function () {
+        $(this).attr('data-role', 'barrier').removeClass().addClass('tree');
+    });
+
+    $board.on('click', '[data-role="barrier"]', function () {
+        $(this).attr('data-role', 'empty').removeClass();
+    });
 });
