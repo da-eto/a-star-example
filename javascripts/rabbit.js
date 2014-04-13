@@ -3,47 +3,75 @@ jQuery(document).ready(function ($) {
     // simple heap implementation of priority queue
     var PriorityQueue = function (norm) {
         this.storage = [null];
-        this.norm = norm || function (e) { return e; };
+        this.norm = norm || function (e) {
+            return e;
+        };
     };
 
     PriorityQueue.prototype = {
         size: function () {
             return this.storage.length - 1;
         },
+        isEmpty: function () {
+            return this.size() < 1;
+        },
         enqueue: function (item) {
             this.storage.push(item);
             this.lift(this.size());
         },
         dequeue: function () {
-            // TODO
+            if (this.isEmpty()) {
+                return null;
+            }
+
+            this.swap(1, this.size());
+            var min = this.storage.pop();
+            this.down(1);
+            return min;
         },
-        lift: function (index) {
-            var parent = Math.floor(index / 2);
+        swap: function (a, b) {
+            var tmp = this.storage[a];
+            this.storage[a] = this.storage[b];
+            this.storage[b] = tmp;
+        },
+        lift: function (current) {
+            var parent = Math.floor(current / 2);
 
             while (parent > 0) {
-                if (this.norm(this.storage[index]) < this.norm(this.storage[parent])) {
-                    var tmp = this.storage[parent];
-                    this.storage[parent] = this.storage[index];
-                    this.storage[index] = tmp;
+                if (this.norm(this.storage[current]) < this.norm(this.storage[parent])) {
+                    this.swap(current, parent);
                 }
 
-                index = parent;
-                parent = Math.floor(index / 2);
+                current = parent;
+                parent = Math.floor(current / 2);
             }
+        },
+        down: function (current) {
+            while (current * 2 <= this.size()) {
+                var child = this.smallerChild(current);
+
+                if (this.norm(this.storage[current]) > this.norm(this.storage[child])) {
+                    this.swap(current, child);
+                }
+
+                current = child;
+            }
+        },
+        smallerChild: function (index) {
+            var left = index * 2;
+            var right = left + 1;
+
+            if (right > this.size()) {
+                return left;
+            }
+
+            if (this.norm(this.storage[left]) < this.norm(this.storage[right])) {
+                return left;
+            }
+
+            return right;
         }
     };
-
-    var queue = new PriorityQueue();
-
-    queue.enqueue(2);
-    queue.enqueue(4);
-    queue.enqueue(3);
-    queue.enqueue(5);
-    queue.enqueue(9);
-    queue.enqueue(3);
-    queue.enqueue(1);
-
-    console.log(queue.storage);
 
     // game board
     var board = new (function (container) {
