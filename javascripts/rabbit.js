@@ -178,7 +178,7 @@ jQuery(document).ready(function ($) {
                         if (!neighbor.opened) {
                             this.add(queue, neighbor);
                         } else {
-                            this.down(queue, neighbor);
+                            this.adjust(queue, neighbor);
                         }
                     }
                 }
@@ -192,11 +192,11 @@ jQuery(document).ready(function ($) {
 
             return result;
         },
-        down: function (queue, node) {
-            queue.down(queue.storage.indexOf(node));
+        adjust: function (queue, node) {
+            queue.lift(queue.storage.indexOf(node));
 
-            if (this.options.onDown) {
-                this.options.onDown(node);
+            if (this.options.onAdjust) {
+                this.options.onAdjust(node);
             }
         },
         add: function (queue, node) {
@@ -445,7 +445,7 @@ jQuery(document).ready(function ($) {
 
         var map = board.createMap();
         var manhattan = function (from, to) {
-            return Math.abs(to.row - from.col) + Math.abs(to.row - from.col);
+            return Math.abs(to.row - from.row) + Math.abs(to.col - from.col);
         };
         var score = function (node) {
             if (node != map.start && node != map.end) {
@@ -479,7 +479,7 @@ jQuery(document).ready(function ($) {
                 mark(node);
             },
             onDequeue: score,
-            onDown: function (node) {
+            onAdjust: function (node) {
                 score(node);
                 mark(node);
             },
