@@ -397,15 +397,20 @@ jQuery(document).ready(function ($) {
 
     $('[data-role="starter"]').on('click', function () {
         board.disableEditor();
+
         var map = board.createMap();
         var manhattan = function (from, to) {
             return Math.abs(to.row - from.col) + Math.abs(to.row - from.col);
         };
+        var score = function (node) {
+            if (node != map.start && node != map.end) {
+                board.scoreCell(node.row, node.col, node.closed, node.f());
+            }
+        };
+
         var simulator = new SearchSimulator(map, manhattan, {
             onEnqueue: function (node) {
-                if (node != map.start && node != map.end) {
-                    board.scoreCell(node.row, node.col, node.closed, node.f());
-                }
+                score(node);
 
                 if (node.parent) {
                     var pr = node.parent.row;
@@ -425,11 +430,9 @@ jQuery(document).ready(function ($) {
                     board.markDirection(node.row, node.col, dir);
                 }
             },
-            onDequeue: function (node) {
-                console.log('dequeue', node);
-            }
+            onDequeue: score
         });
-        console.log(simulator.search());
-        console.log(simulator.map);
+
+        simulator.search();
     });
 });
