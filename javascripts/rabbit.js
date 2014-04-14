@@ -117,10 +117,28 @@ jQuery(document).ready(function ($) {
                 result.push(this.grid[r][c - 1]);
             }
 
+            if (this.grid[r - 1] && this.grid[r - 1][c - 1]) {
+                result.push(this.grid[r - 1][c - 1]);
+            }
+
+            if (this.grid[r - 1] && this.grid[r - 1][c + 1]) {
+                result.push(this.grid[r - 1][c + 1]);
+            }
+
+            if (this.grid[r + 1] && this.grid[r + 1][c + 1]) {
+                result.push(this.grid[r + 1][c + 1]);
+            }
+
+            if (this.grid[r + 1] && this.grid[r + 1][c - 1]) {
+                result.push(this.grid[r + 1][c - 1]);
+            }
+
             return result;
         },
         distance: function (from, to) {
-            return Math.abs(to.row - from.row) + Math.abs(to.col - from.col);
+            var dx = to.row - from.row;
+            var dy = to.col - from.col;
+            return Math.sqrt(dx * dx + dy * dy);
         },
         add: function (r, c) {
             if (!this.grid[r]) {
@@ -395,7 +413,7 @@ jQuery(document).ready(function ($) {
                 var cls = closed ? 'closed' : 'opened';
                 $cell.removeClass('closed opened').addClass(cls).addClass('circle');
                 var $points = $('<div class="points"></div>');
-                $points.html(score);
+                $points.html(Math.round(score));
                 $cell.html('').append($points);
             }
         };
