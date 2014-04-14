@@ -178,13 +178,20 @@ jQuery(document).ready(function ($) {
                         if (!neighbor.opened) {
                             this.add(queue, neighbor);
                         } else {
-                            queue.down(queue.storage.indexOf(neighbor));
+                            this.down(queue, neighbor);
                         }
                     }
                 }
             }
 
             return [];
+        },
+        down: function (queue, node) {
+            queue.down(queue.storage.indexOf(node));
+
+            if (this.options.onDown) {
+                this.options.onDown(node);
+            }
         },
         add: function (queue, node) {
             queue.enqueue(node);
@@ -408,29 +415,36 @@ jQuery(document).ready(function ($) {
             }
         };
 
+        var mark = function (node) {
+            if (node.parent) {
+                var pr = node.parent.row;
+                var pc = node.parent.col;
+                var dir = '';
+
+                if (pr == node.row - 1 && pc == node.col) {
+                    dir = 'from-top';
+                } else if (pr == node.row && pc == node.col + 1) {
+                    dir = 'from-right';
+                } else if (pr == node.row + 1 && pc == node.col) {
+                    dir = 'from-bottom';
+                } else if (pr == node.row && pc == node.col - 1) {
+                    dir = 'from-left';
+                }
+
+                board.markDirection(node.row, node.col, dir);
+            }
+        };
+
         var simulator = new SearchSimulator(map, manhattan, {
             onEnqueue: function (node) {
                 score(node);
-
-                if (node.parent) {
-                    var pr = node.parent.row;
-                    var pc = node.parent.col;
-                    var dir = '';
-
-                    if (pr == node.row - 1 && pc == node.col) {
-                        dir = 'from-top';
-                    } else if (pr == node.row && pc == node.col + 1) {
-                        dir = 'from-right';
-                    } else if (pr == node.row + 1 && pc == node.col) {
-                        dir = 'from-bottom';
-                    } else if (pr == node.row && pc == node.col - 1) {
-                        dir = 'from-left';
-                    }
-
-                    board.markDirection(node.row, node.col, dir);
-                }
+                mark(node);
             },
-            onDequeue: score
+            onDequeue: score,
+            onDown: function (node) {
+                score(node);
+                mark(node);
+            }
         });
 
         simulator.search();
