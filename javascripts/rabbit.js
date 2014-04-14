@@ -156,7 +156,7 @@ jQuery(document).ready(function ($) {
                 var node = this.minimal(queue);
 
                 if (node === this.map.end) {
-                    return this.backtrace(this.map.end);
+                    break;
                 }
 
                 var neighbors = this.map.neighbors(node);
@@ -182,6 +182,14 @@ jQuery(document).ready(function ($) {
                         }
                     }
                 }
+            }
+
+            if (this.options.onEnd) {
+                this.options.onEnd();
+            }
+
+            if (this.map.end.parent) {
+                return this.backtrace(this.map.end);
             }
 
             return [];
@@ -227,10 +235,10 @@ jQuery(document).ready(function ($) {
 
         var barrier = {
             create: function () {
-                $(this).attr('data-role', 'barrier').removeClass().addClass('tree');
+                $(this).attr('data-role', 'barrier').removeClass().addClass('tree').html('');
             },
             remove: function () {
-                $(this).attr('data-role', 'empty').removeClass();
+                $(this).attr('data-role', 'empty').removeClass().html('');
             }
         };
 
@@ -278,43 +286,51 @@ jQuery(document).ready(function ($) {
                 return;
             }
 
-            $characters.draggable({
-                containment: $board,
-                zIndex: 100,
-                revert: 'invalid',
-                revertDuration: positioningDuration
-            });
+            if ($characters.eq(0).data('draggable')) {
+                $characters.draggable('enable');
+            } else {
+                $characters.draggable({
+                    containment: $board,
+                    zIndex: 100,
+                    revert: 'invalid',
+                    revertDuration: positioningDuration
+                });
+            }
 
-            $cells.droppable({
-                accept: function (element) {
-                    return $(this).has('[data-role="empty"]').length > 0 && $(element).data('role') == 'character';
-                },
-                drop: function (event, ui) {
-                    var $person = $(ui.draggable);
-                    var $oldParent = $person.parent();
-                    var $target = $(this);
+            if ($cells.eq(0).data('droppable')) {
+                $cells.droppable('enable');
+            } else {
+                $cells.droppable({
+                    accept: function (element) {
+                        return $(this).has('[data-role="empty"]').length > 0 && $(element).attr('data-role') == 'character';
+                    },
+                    drop: function (event, ui) {
+                        var $person = $(ui.draggable);
+                        var $oldParent = $person.parent();
+                        var $target = $(this);
 
-                    $target.removeClass('drag-over');
-                    $target.children().detach().appendTo($oldParent);
-                    $person
-                        .detach()
-                        .appendTo($target)
-                        .css({
-                            left: parseInt($person.css('left'), 10) + $oldParent.offset().left - $target.offset().left,
-                            top: parseInt($person.css('top'), 10) + $oldParent.offset().top - $target.offset().top
-                        })
-                        .animate({
-                            left: 0,
-                            top: 0
-                        }, positioningDuration);
-                },
-                over: function () {
-                    $(this).addClass('drag-over');
-                },
-                out: function () {
-                    $(this).removeClass('drag-over');
-                }
-            });
+                        $target.removeClass('drag-over');
+                        $target.children().detach().appendTo($oldParent);
+                        $person
+                            .detach()
+                            .appendTo($target)
+                            .css({
+                                left: parseInt($person.css('left'), 10) + $oldParent.offset().left - $target.offset().left,
+                                top: parseInt($person.css('top'), 10) + $oldParent.offset().top - $target.offset().top
+                            })
+                            .animate({
+                                left: 0,
+                                top: 0
+                            }, positioningDuration);
+                    },
+                    over: function () {
+                        $(this).addClass('drag-over');
+                    },
+                    out: function () {
+                        $(this).removeClass('drag-over');
+                    }
+                });
+            }
 
             $board.on('click', '[data-role="empty"]', barrier.create);
             $board.on('click', '[data-role="barrier"]', barrier.remove);
@@ -342,7 +358,7 @@ jQuery(document).ready(function ($) {
             $board.find('tr').each(function (row, tr) {
                 $(tr).find('td').each(function (col, td) {
                     var $cell = $(td).find('div').eq(0);
-                    var role = $cell.data('role');
+                    var role = $cell.attr('data-role');
 
                     if ('character' == role) {
                         if ($cell.hasClass('rabbit')) {
@@ -379,6 +395,10 @@ jQuery(document).ready(function ($) {
             }
         };
 
+        this.clearScores = function () {
+            $board.find('[data-role="empty"]').removeClass().html('');
+        };
+
         return this;
     })('.game-container');
 
@@ -404,6 +424,7 @@ jQuery(document).ready(function ($) {
 
     $('[data-role="starter"]').on('click', function () {
         board.disableEditor();
+        board.clearScores();
 
         var map = board.createMap();
         var manhattan = function (from, to) {
@@ -444,6 +465,9 @@ jQuery(document).ready(function ($) {
             onDown: function (node) {
                 score(node);
                 mark(node);
+            },
+            onEnd: function () {
+                board.enableEditor();
             }
         });
 
