@@ -291,7 +291,7 @@ jQuery(document).ready(function ($) {
                 return;
             }
 
-            if ($characters.eq(0).data('draggable')) {
+            if ($characters.eq(0).is('.ui-draggable-disabled')) {
                 $characters.draggable('enable');
             } else {
                 $characters.draggable({
@@ -302,7 +302,7 @@ jQuery(document).ready(function ($) {
                 });
             }
 
-            if ($cells.eq(0).data('droppable')) {
+            if ($cells.eq(0).is('.ui-droppable-disabled')) {
                 $cells.droppable('enable');
             } else {
                 $cells.droppable({
