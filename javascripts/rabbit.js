@@ -466,8 +466,10 @@ jQuery(document).ready(function ($) {
         board.clearScores();
 
         var map = board.createMap();
-        var manhattan = function (from, to) {
-            return Math.abs(to.row - from.row) + Math.abs(to.col - from.col);
+        var heuristic = function (from, to) {
+            var dx = Math.abs(from.row - to.row);
+            var dy = Math.abs(from.col - to.col);
+            return (dx + dy) + (Math.sqrt(2.0) - 2) * Math.min(dx, dy);
         };
         var score = function (node) {
             if (node != map.start && node != map.end) {
@@ -495,7 +497,7 @@ jQuery(document).ready(function ($) {
             }
         };
 
-        var simulator = new SearchSimulator(map, manhattan, 100, {
+        var simulator = new SearchSimulator(map, heuristic, 100, {
             onEnqueue: function (node) {
                 score(node);
                 mark(node);
