@@ -102,25 +102,25 @@
       &.from-top-left:before {
         top: 0;
         left: 0;
-        @include triangle(bottom-right, $arrow_width, half, $brand-danger);
+        @include triangle(bottom-right, $arrow_width * 0.8, half, $brand-danger);
       }
 
       &.from-top-right:before {
         top: 0;
         right: 0;
-        @include triangle(bottom-left, $arrow_width, half, $brand-danger);
+        @include triangle(bottom-left, $arrow_width * 0.8, half, $brand-danger);
       }
 
       &.from-bottom-left:before {
         bottom: 0;
         left: 0;
-        @include triangle(top-right, $arrow_width, half, $brand-danger);
+        @include triangle(top-right, $arrow_width * 0.8, half, $brand-danger);
       }
 
       &.from-bottom-right:before {
         bottom: 0;
         right: 0;
-        @include triangle(top-left, $arrow_width, half, $brand-danger);
+        @include triangle(top-left, $arrow_width * 0.8, half, $brand-danger);
       }
     }
   }
