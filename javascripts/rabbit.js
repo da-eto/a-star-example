@@ -139,10 +139,11 @@ jQuery(document).ready(function ($) {
         }
     };
 
-    var SearchSimulator = function (map, heuristic, options) {
+    var SearchSimulator = function (map, heuristic, delay, options) {
         this.map = map;
         this.heuristic = heuristic;
         this.options = options;
+        this.delay = delay;
     };
 
     SearchSimulator.prototype = {
@@ -151,46 +152,49 @@ jQuery(document).ready(function ($) {
                 return node.f();
             });
             this.add(queue, this.map.start);
+            var solver = this;
 
-            while (!queue.isEmpty()) {
-                var node = this.minimal(queue);
+            var loop = function () {
+                setTimeout(function () {
+                    var node = solver.minimal(queue);
 
-                if (node === this.map.end) {
-                    break;
-                }
+                    if (node === solver.map.end) {
+                        solver.options.onEnd(solver.backtrace(solver.map.end));
+                    } else {
+                        var neighbors = solver.map.neighbors(node);
 
-                var neighbors = this.map.neighbors(node);
+                        for (var i = 0; i < neighbors.length; i++) {
+                            var neighbor = neighbors[i];
 
-                for (var i = 0; i < neighbors.length; i++) {
-                    var neighbor = neighbors[i];
+                            if (neighbor.closed) {
+                                continue;
+                            }
 
-                    if (neighbor.closed) {
-                        continue;
-                    }
+                            var distance = node.g + solver.map.distance(node, neighbor);
 
-                    var distance = node.g + this.map.distance(node, neighbor);
+                            if (!neighbor.opened || distance < neighbor.g) {
+                                neighbor.g = distance;
+                                neighbor.h = neighbor.h || solver.heuristic(neighbor, solver.map.end);
+                                neighbor.parent = node;
 
-                    if (!neighbor.opened || distance < neighbor.g) {
-                        neighbor.g = distance;
-                        neighbor.h = neighbor.h || this.heuristic(neighbor, this.map.end);
-                        neighbor.parent = node;
+                                if (!neighbor.opened) {
+                                    solver.add(queue, neighbor);
+                                } else {
+                                    solver.adjust(queue, neighbor);
+                                }
+                            }
+                        }
 
-                        if (!neighbor.opened) {
-                            this.add(queue, neighbor);
+                        if (!queue.isEmpty()) {
+                            loop();
                         } else {
-                            this.adjust(queue, neighbor);
+                            solver.options.onEnd([]);
                         }
                     }
-                }
-            }
+                }, solver.delay);
+            };
 
-            var result = this.map.end.parent ? this.backtrace(this.map.end) : [];
-
-            if (this.options.onEnd) {
-                this.options.onEnd(result);
-            }
-
-            return result;
+            loop();
         },
         adjust: function (queue, node) {
             queue.lift(queue.storage.indexOf(node));
@@ -473,7 +477,7 @@ jQuery(document).ready(function ($) {
             }
         };
 
-        var simulator = new SearchSimulator(map, manhattan, {
+        var simulator = new SearchSimulator(map, manhattan, 100, {
             onEnqueue: function (node) {
                 score(node);
                 mark(node);
