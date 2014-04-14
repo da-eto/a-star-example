@@ -58,6 +58,10 @@
         background: lighten($brand-warning, 25%);
       }
 
+      &.found {
+        background: lighten($brand-danger, 25%);
+      }
+
       &.from-top:before, &.from-right:before, &.from-bottom:before, &.from-left:before {
         content: "";
         display: block;

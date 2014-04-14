@@ -184,15 +184,13 @@ jQuery(document).ready(function ($) {
                 }
             }
 
+            var result = this.map.end.parent ? this.backtrace(this.map.end) : [];
+
             if (this.options.onEnd) {
-                this.options.onEnd();
+                this.options.onEnd(result);
             }
 
-            if (this.map.end.parent) {
-                return this.backtrace(this.map.end);
-            }
-
-            return [];
+            return result;
         },
         down: function (queue, node) {
             queue.down(queue.storage.indexOf(node));
@@ -220,8 +218,15 @@ jQuery(document).ready(function ($) {
             return node;
         },
         backtrace: function (node) {
-            // TODO
-            return [];
+            var current = node;
+            var result = [];
+
+            while (current) {
+                result.unshift(current);
+                current = current.parent;
+            }
+
+            return result;
         }
     };
 
@@ -375,8 +380,12 @@ jQuery(document).ready(function ($) {
             return map;
         };
 
+        var getCell = function (row, col) {
+            return $board.find('tr:eq(' + row + ')>td:eq(' + col + ')>div');
+        };
+
         this.scoreCell = function (row, col, closed, score) {
-            var $cell = $board.find('tr:eq(' + row + ')>td:eq(' + col + ')>div');
+            var $cell = getCell(row, col);
 
             if ($cell.length) {
                 var cls = closed ? 'closed' : 'opened';
@@ -388,10 +397,18 @@ jQuery(document).ready(function ($) {
         };
 
         this.markDirection = function (row, col, dir) {
-            var $cell = $board.find('tr:eq(' + row + ')>td:eq(' + col + ')>div');
+            var $cell = getCell(row, col);
 
             if ($cell.length) {
                 $cell.removeClass('from-top from-right from-bottom from-left').addClass(dir);
+            }
+        };
+
+        this.markFound = function (row, col) {
+            var $cell = getCell(row, col);
+
+            if ($cell.length) {
+                $cell.addClass('found');
             }
         };
 
@@ -466,7 +483,15 @@ jQuery(document).ready(function ($) {
                 score(node);
                 mark(node);
             },
-            onEnd: function () {
+            onEnd: function (result) {
+                for (var i = 0; i < result.length; i++) {
+                    var node = result[i];
+
+                    if (node !== map.start && node !== map.end) {
+                        board.markFound(node.row, node.col);
+                    }
+                }
+
                 board.enableEditor();
             }
         });
