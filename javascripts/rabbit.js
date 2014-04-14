@@ -423,7 +423,7 @@ jQuery(document).ready(function ($) {
 
             if ($cell.length) {
                 var clss = 'from-top from-right from-bottom from-left' +
-                    'from-top-left from-top-right from-bottom-right from-bottom-left';
+                    ' from-top-left from-top-right from-bottom-right from-bottom-left';
                 $cell.removeClass(clss).addClass(dir);
             }
         };
@@ -507,16 +507,15 @@ jQuery(document).ready(function ($) {
             }
         };
 
+        var marker = function (node) {
+            score(node);
+            mark(node);
+        };
+
         var simulator = new SearchSimulator(map, heuristic, 100, {
-            onEnqueue: function (node) {
-                score(node);
-                mark(node);
-            },
-            onDequeue: score,
-            onAdjust: function (node) {
-                score(node);
-                mark(node);
-            },
+            onEnqueue: marker,
+            onDequeue: marker,
+            onAdjust: marker,
             onEnd: function (result) {
                 for (var i = 0; i < result.length; i++) {
                     var node = result[i];
