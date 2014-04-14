@@ -62,7 +62,8 @@
         background: lighten($brand-danger, 25%);
       }
 
-      &.from-top:before, &.from-right:before, &.from-bottom:before, &.from-left:before {
+      &.from-top:before, &.from-right:before, &.from-bottom:before, &.from-left:before,
+      &.from-top-left:before, &.from-top-right:before, &.from-bottom-right:before, &.from-bottom-left:before {
         content: "";
         display: block;
         position: absolute;
@@ -96,6 +97,30 @@
         left: 0;
         @include triangle(right, $arrow_width, half, $brand-danger);
         margin: (- $arrow_width / 2) 0 0 0;
+      }
+
+      &.from-top-left:before {
+        top: 0;
+        left: 0;
+        @include triangle(bottom-right, $arrow_width, half, $brand-danger);
+      }
+
+      &.from-top-right:before {
+        top: 0;
+        right: 0;
+        @include triangle(bottom-left, $arrow_width, half, $brand-danger);
+      }
+
+      &.from-bottom-left:before {
+        bottom: 0;
+        left: 0;
+        @include triangle(top-right, $arrow_width, half, $brand-danger);
+      }
+
+      &.from-bottom-right:before {
+        bottom: 0;
+        right: 0;
+        @include triangle(top-left, $arrow_width, half, $brand-danger);
       }
     }
   }

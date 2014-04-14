@@ -422,7 +422,9 @@ jQuery(document).ready(function ($) {
             var $cell = getCell(row, col);
 
             if ($cell.length) {
-                $cell.removeClass('from-top from-right from-bottom from-left').addClass(dir);
+                var clss = 'from-top from-right from-bottom from-left' +
+                    'from-top-left from-top-right from-bottom-right from-bottom-left';
+                $cell.removeClass(clss).addClass(dir);
             }
         };
 
@@ -491,6 +493,14 @@ jQuery(document).ready(function ($) {
                     dir = 'from-bottom';
                 } else if (pr == node.row && pc == node.col - 1) {
                     dir = 'from-left';
+                } else if (pr == node.row - 1 && pc == node.col - 1) {
+                    dir = 'from-top-left';
+                } else if (pr == node.row - 1 && pc == node.col + 1) {
+                    dir = 'from-top-right';
+                } else if (pr == node.row + 1 && pc == node.col - 1) {
+                    dir = 'from-bottom-left';
+                } else if (pr == node.row + 1 && pc == node.col + 1) {
+                    dir = 'from-bottom-right';
                 }
 
                 board.markDirection(node.row, node.col, dir);

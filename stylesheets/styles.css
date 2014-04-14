@@ -1941,12 +1941,16 @@ h1, h2, h3, h4, h5, h6 { font-weight: bold; }
 .game-board td div.circle .points { position: absolute; width: 2em; height: 1em; font-size: 1em; line-height: 1em; margin: -0.5em 0 0 -1em; text-align: center; top: 50%; left: 50%; }
 .game-board td div.closed { background: #fae3c4; }
 .game-board td div.found { background: #f0b9b8; }
-.game-board td div.from-top:before, .game-board td div.from-right:before, .game-board td div.from-bottom:before, .game-board td div.from-left:before { content: ""; display: block; position: absolute; }
+.game-board td div.from-top:before, .game-board td div.from-right:before, .game-board td div.from-bottom:before, .game-board td div.from-left:before, .game-board td div.from-top-left:before, .game-board td div.from-top-right:before, .game-board td div.from-bottom-right:before, .game-board td div.from-bottom-left:before { content: ""; display: block; position: absolute; }
 .game-board td div.from-top:before { top: 0; left: 50%; width: 0; height: 0; border-top: 0.5em solid #d9534f; border-right: 0.5em solid transparent; border-left: 0.5em solid transparent; margin: 0 0 0 -0.5em; }
 .game-board td div.from-right:before { top: 50%; right: 0; width: 0; height: 0; border-top: 0.5em solid transparent; border-right: 0.5em solid #d9534f; border-bottom: 0.5em solid transparent; margin: -0.5em 0 0 0; }
 .game-board td div.from-bottom:before { bottom: 0; left: 50%; width: 0; height: 0; border-right: 0.5em solid transparent; border-bottom: 0.5em solid #d9534f; border-left: 0.5em solid transparent; margin: 0 0 0 -0.5em; }
 .game-board td div.from-left:before { top: 50%; left: 0; width: 0; height: 0; border-top: 0.5em solid transparent; border-bottom: 0.5em solid transparent; border-left: 0.5em solid #d9534f; margin: -0.5em 0 0 0; }
-.game-board .rabbit { background: url('../images/rabbit.png?1397349231') no-repeat; background-size: 100% auto; }
-.game-board .carrot { background: url('../images/carrot.png?1397353814') no-repeat; background-size: 100% auto; }
-.game-board .tree { background: url('../images/tree.png?1397350074') no-repeat; background-size: 100% auto; }
+.game-board td div.from-top-left:before { top: 0; left: 0; width: 0; height: 0; border-top: 0.5em solid transparent; border-right: 0.5em solid #d9534f; border-bottom: 0.5em solid #d9534f; border-left: 0.5em solid transparent; }
+.game-board td div.from-top-right:before { top: 0; right: 0; width: 0; height: 0; border-top: 0.5em solid transparent; border-right: 0.5em solid transparent; border-bottom: 0.5em solid #d9534f; border-left: 0.5em solid #d9534f; }
+.game-board td div.from-bottom-left:before { bottom: 0; left: 0; width: 0; height: 0; border-top: 0.5em solid #d9534f; border-right: 0.5em solid #d9534f; border-bottom: 0.5em solid transparent; border-left: 0.5em solid transparent; }
+.game-board td div.from-bottom-right:before { bottom: 0; right: 0; width: 0; height: 0; border-top: 0.5em solid #d9534f; border-right: 0.5em solid transparent; border-bottom: 0.5em solid transparent; border-left: 0.5em solid #d9534f; }
+.game-board .rabbit { background: url('../images/rabbit.png?1397443205') no-repeat; background-size: 100% auto; }
+.game-board .carrot { background: url('../images/carrot.png?1397443177') no-repeat; background-size: 100% auto; }
+.game-board .tree { background: url('../images/tree.png?1397443234') no-repeat; background-size: 100% auto; }
 .game-board .ui-state-disabled { opacity: 100; filter: alpha(opacity=10000); }
